@@ -1,8 +1,6 @@
 package logs
 
 import (
-	"bytes"
-	"encoding/json"
 	"fmt"
 	"os"
 	"strings"
@@ -56,66 +54,6 @@ type LogConfig struct {
 	Console *ConsoleConfig  `json:"console"`
 	Files   []*FileConfig   `json:"files"`
 	Sockets []*SocketConfig `json:"sockets"`
-}
-
-// LoadJsonConfiguration load log config from json file
-// see examples/example.json for ducumentation
-func (log Logger) LoadJsonConfiguration(filename string) {
-			log.Close()
-			dst := new(bytes.Buffer)
-			var (
-				lc      LogConfig
-				content string
-			)
-			err := json.Compact(dst, []byte(filename))
-
-			if err != nil {
-				content, err = ReadFile(filename)
-				if err != nil {
-					fmt.Fprintf(os.Stderr, "LoadJsonConfiguration: Error: Could not read %q: %s\n", filename, err)
-					os.Exit(1)
-				}
-			} else {
-				content = string(dst.Bytes())
-			}
-
-			err = json.Unmarshal([]byte(content), &lc)
-			if err != nil {
-				fmt.Fprintf(os.Stderr, "LoadJsonConfiguration: Error: Could not parse json configuration in %q: %s\n", filename, err)
-				os.Exit(1)
-			}
-
-			if lc.Console.Enable {
-				filt, _ := jsonToConsoleLogWriter(filename, lc.Console)
-				log["stdout"] = &Filter{getLogLevel(lc.Console.Level), "", filt, "DEFAULT"}
-			}
-
-			for _, fc := range lc.Files {
-				if !fc.Enable {
-					continue
-				}
-				if len(fc.Category) == 0 {
-					fmt.Fprintf(os.Stderr, "LoadJsonConfiguration: file category can not be empty in <%s>: ", filename)
-					os.Exit(1)
-				}
-
-				filt, _ := jsonToFileLogWriter(filename, fc)
-				log[fc.Category] = &Filter{getLogLevel(fc.Level), "", filt, fc.Category}
-			}
-
-			for _, sc := range lc.Sockets {
-				if !sc.Enable {
-			continue
-		}
-		if len(sc.Category) == 0 {
-			fmt.Fprintf(os.Stderr, "LoadJsonConfiguration: file category can not be empty in <%s>: ", filename)
-			os.Exit(1)
-		}
-
-		filt, _ := jsonToSocketLogWriter(filename, sc)
-		log[sc.Category] = &Filter{getLogLevel(sc.Level), "", filt, sc.Category}
-	}
-
 }
 
 func getLogLevel(l string) Level {
@@ -194,31 +132,7 @@ func jsonToFileLogWriter(filename string, ff *FileConfig) (*FileLogWriter, bool)
 	return flw, true
 }
 
-func jsonToSocketLogWriter(filename string, sf *SocketConfig) (SocketLogWriter, bool) {
-	endpoint := ""
-	protocol := "tcp"
 
-	if len(sf.Addr) == 0 {
-		fmt.Fprintf(os.Stderr, "LoadConfiguration: Error: Required property \"%s\" for file filter missing in %s\n", "addr", filename)
-		os.Exit(1)
-	}
-	endpoint = sf.Addr
-
-	// set socket protocol
-	if len(sf.Protocol) > 0 {
-		if sf.Protocol != "tcp" && sf.Protocol != "udp" {
-			fmt.Fprintf(os.Stderr, "LoadConfiguration: Error: Required property \"%s\" for file filter wrong type in %s, use default tcp instead.\n", "protocol", filename)
-		} else {
-			protocol = sf.Protocol
-		}
-	}
-
-	if !sf.Enable {
-		return nil, true
-	}
-
-	return NewSocketLogWriter(protocol, endpoint), true
-}
 
 func ReadFile(path string) (string, error) {
 	if path == "" {

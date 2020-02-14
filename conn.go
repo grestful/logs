@@ -68,6 +68,10 @@ func (c *ConnWriter) LogWrite(rec *LogRecord) {
 	c.rec <- rec
 }
 
+func (c *ConnWriter) SetFormat(format string) {
+	c.format = format
+}
+
 func (c *ConnWriter) connect() error {
 	if c.writer != nil {
 		c.writer.Close()

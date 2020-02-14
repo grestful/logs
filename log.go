@@ -34,26 +34,5 @@ package logs
     }]
 }
  */
-func InitLog(configPath string) {
-	// load config file, it's optional
-	// or LoadConfiguration("./example.json", "json")
-	// config file could be json or xml
-	LoadConfiguration(configPath)
 
-	GetLogger("socket", "app").Info("category Test info test ...")
-	GetLogger("socket", "app").Info("category Test info test message: %s", "new test msg")
-	GetLogger("socket", "app").Debug("category Test debug test ...")
-
-	// Other category not exist, test
-	GetLogger("socket", "app").Debug("category Other debug test ...")
-
-	// socket log test
-	GetLogger("socket", "app").Debug("category TestSocket debug test ...")
-
-	// original log4go test
-	Info("normal info test ...")
-	Debug("normal debug test ...")
-
-	Close()
-}
 

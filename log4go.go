@@ -109,6 +109,8 @@ type LogWriter interface {
 	// This should clean up anything lingering about the LogWriter, as it is called before
 	// the LogWriter is removed.  LogWrite should not be called after Close.
 	Close()
+
+	SetFormat(format string)
 }
 
 /****** Logger ******/
@@ -165,6 +167,9 @@ func (log Logger) Close() {
 	}
 }
 
+func (log Logger) GetDefaultFilter() *Filter {
+	return log["default"]
+}
 // Add a new LogWriter to the Logger which will only log messages at lvl or
 // higher.  This function should not be called from multiple goroutines.
 // Returns the logger for chaining.
