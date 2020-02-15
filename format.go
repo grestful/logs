@@ -18,9 +18,9 @@ const (
 )
 
 type formatCacheType struct {
-	LastUpdateSeconds    int64
-	shortTime, shortDate string
-	longTime, longDate   string
+	LastUpdateSeconds        int64
+	shortTime, shortDate     string
+	longTime, longDate, zone string
 }
 
 var formatCache = &formatCacheType{}
@@ -51,12 +51,14 @@ func FormatLogRecord(format string, rec *LogRecord) string {
 	if cache.LastUpdateSeconds != secs {
 		month, day, year := rec.Created.Month(), rec.Created.Day(), rec.Created.Year()
 		hour, minute, second := rec.Created.Hour(), rec.Created.Minute(), rec.Created.Second()
+		zone, _ := rec.Created.Zone()
 		updated := &formatCacheType{
 			LastUpdateSeconds: secs,
 			shortTime:         fmt.Sprintf("%02d:%02d", hour, minute),
 			shortDate:         fmt.Sprintf("%02d-%02d-%02d", day, month, year%100),
 			longTime:          fmt.Sprintf("%02d:%02d:%02d", hour, minute, second),
 			longDate:          fmt.Sprintf("%04d-%02d-%02d", year, month, day),
+			zone:              zone,
 		}
 		cache = *updated
 		formatCache = updated
@@ -72,8 +74,8 @@ func FormatLogRecord(format string, rec *LogRecord) string {
 		if i > 0 && len(piece) > 0 {
 			switch piece[0] {
 			case 'A':
-				ms := time.Now().UnixNano() / 1e6 - time.Now().Unix() * 1e3
-				out.WriteString(fmt.Sprintf("%sT%s.%dZ", cache.longDate, cache.longTime, ms))
+				ms := time.Now().UnixNano()/1e6 - time.Now().Unix()*1e3
+				out.WriteString(fmt.Sprintf("%sT%s.%3d,%s", cache.longDate, cache.longTime, ms, cache.zone))
 			case 'T':
 				out.WriteString(cache.longTime)
 			case 't':
