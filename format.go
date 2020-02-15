@@ -97,6 +97,8 @@ func FormatLogRecord(format string, rec *LogRecord) string {
 					rec.Category = "DEFAULT"
 				}
 				out.WriteString(rec.Category)
+			case 'P':
+				out.WriteString(Project)
 			}
 			if len(piece) > 1 {
 				out.Write(piece[1:])

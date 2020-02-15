@@ -121,7 +121,6 @@ type LogWriter interface {
 // the associated LogWriter.
 type Filter struct {
 	Level   Level
-	Project string
 	LogWriter
 	Category string
 }
@@ -145,7 +144,7 @@ func NewLogger() Logger {
 func NewConsoleLogger(lvl Level) Logger {
 	os.Stderr.WriteString("warning: use of deprecated NewConsoleLogger\n")
 	return Logger{
-		"stdout": &Filter{lvl, "", NewConsoleLogWriter(), "DEFAULT"},
+		"stdout": &Filter{lvl, NewConsoleLogWriter(), "DEFAULT"},
 	}
 }
 
@@ -153,7 +152,7 @@ func NewConsoleLogger(lvl Level) Logger {
 // or above lvl to standard output.
 func NewDefaultLogger(lvl Level) Logger {
 	return Logger{
-		"default": &Filter{lvl, "", NewConsoleLogWriter(), "DEFAULT"},
+		"default": &Filter{lvl,  NewConsoleLogWriter(), "DEFAULT"},
 	}
 }
 
@@ -183,7 +182,7 @@ func (log Logger) AddFilter(name string, lvl Level, writer LogWriter, categorys 
 		c = "DEFAULT"
 	}
 
-	log[name] = &Filter{lvl, "", writer, c}
+	log[name] = &Filter{lvl, writer, c}
 	return log
 }
 

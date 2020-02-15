@@ -35,13 +35,13 @@ func SetConsole(config ConsoleConfig) {
 	clw := NewConsoleLogWriter()
 	clw.SetFormat(format)
 
-	Global["stdout"] = &Filter{getLogLevel(config.Level), Project, clw, "DEFAULT"}
+	Global["stdout"] = &Filter{getLogLevel(config.Level), clw, "DEFAULT"}
 }
 
 func SetConn(config SocketConfig) {
 	format := "[%A][%L][%P] %M"
 	clw := NewConn(config.Protocol, config.Addr, format, getLogLevel(config.Level))
-	Global["socket"] = &Filter{getLogLevel(config.Level), Project, clw, "SOCKET"}
+	Global["socket"] = &Filter{getLogLevel(config.Level), clw, "SOCKET"}
 }
 
 // Wrapper for (*Logger).AddFilter

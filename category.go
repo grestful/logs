@@ -8,10 +8,10 @@ import (
 )
 
 // LOGGER get the log Filter by category
-func GetLogger(category, project string) *Filter {
+func GetLogger(category string) *Filter {
 	f, ok := Global[category]
 	if !ok {
-		f = &Filter{TRACE, project, NewConsoleLogWriter(), "DEFAULT"}
+		f = &Filter{TRACE, NewConsoleLogWriter(), "DEFAULT"}
 	} else {
 		f.Category = category
 	}
