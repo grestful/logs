@@ -56,7 +56,7 @@ func FormatLogRecord(format string, rec *LogRecord) string {
 			LastUpdateSeconds: secs,
 			shortTime:         fmt.Sprintf("%02d:%02d", hour, minute),
 			shortDate:         fmt.Sprintf("%02d-%02d-%02d", day, month, year%100),
-			longTime:          fmt.Sprintf("%02d:%02d:%02d %s", hour, minute, second, zone),
+			longTime:          fmt.Sprintf("%02d:%02d:%02d", hour, minute, second),
 			longDate:          fmt.Sprintf("%04d-%02d-%02d", year, month, day),
 		}
 		cache = *updated
