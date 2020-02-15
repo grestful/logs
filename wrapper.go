@@ -15,6 +15,8 @@ var (
 
 var Project = "App-Api"
 
+const FORMAT  =  "[%A][%L][%P] %M"
+
 func init() {
 	Global = NewDefaultLogger(TRACE)
 }

@@ -20,7 +20,7 @@ type ConsoleLogWriter struct {
 // This creates a new ConsoleLogWriter
 func NewConsoleLogWriter() *ConsoleLogWriter {
 	consoleWriter := &ConsoleLogWriter{
-		format: "[%T %D] [%C] [%L] (%S) %M",
+		format: "[%A][%L][%P] %M",
 		w:      make(chan *LogRecord, LogBufferLength),
 	}
 	go consoleWriter.run(stdout)
@@ -46,4 +46,9 @@ func (c *ConsoleLogWriter) LogWrite(rec *LogRecord) {
 func (c *ConsoleLogWriter) Close() {
 	close(c.w)
 	time.Sleep(50 * time.Millisecond) // Try to give console I/O time to complete
+}
+
+
+func (c *ConsoleLogWriter) Write(p []byte) (n int, err error) {
+	return fmt.Fprint(stdout, p)
 }

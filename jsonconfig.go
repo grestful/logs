@@ -2,10 +2,8 @@ package logs
 
 import (
 	"fmt"
-	"os"
-	"strings"
-
 	"github.com/toolkits/file"
+	"os"
 )
 
 type ConsoleConfig struct {
@@ -34,7 +32,7 @@ type FileConfig struct {
 
 	Rotate   bool   `json:"rotate"`
 	Maxsize  string `json:"maxsize"`  // \d+[KMG]? Suffixes are in terms of 2**10
-	maxLines string `json:"maxLines"` //\d+[KMG]? Suffixes are in terms of thousands
+	MaxLines string `json:"MaxLines"` //\d+[KMG]? Suffixes are in terms of thousands
 	Daily    bool   `json:"daily"`    //Automatically rotates by day
 	Sanitize bool   `json:"sanitize"` //Sanitize newlines to prevent log injection
 }
@@ -77,62 +75,6 @@ func getLogLevel(l string) Level {
 	}
 	return lvl
 }
-
-func jsonToConsoleLogWriter(filename string, cf *ConsoleConfig) (*ConsoleLogWriter, bool) {
-	format := "[%D %T] [%C] [%L] (%S) %M"
-
-	if len(cf.Pattern) > 0 {
-		format = strings.Trim(cf.Pattern, " \r\n")
-	}
-
-	if !cf.Enable {
-		return nil, true
-	}
-
-	clw := NewConsoleLogWriter()
-	clw.SetFormat(format)
-
-	return clw, true
-}
-
-func jsonToFileLogWriter(filename string, ff *FileConfig) (*FileLogWriter, bool) {
-	file := "app.log"
-	format := "[%D %T] [%C] [%L] (%S) %M"
-	maxLines := 0
-	maxsize := 0
-	daily := false
-	rotate := false
-	sanitize := false
-
-	if len(ff.Filename) > 0 {
-		file = ff.Filename
-	}
-	if len(ff.Pattern) > 0 {
-		format = strings.Trim(ff.Pattern, " \r\n")
-	}
-	if len(ff.maxLines) > 0 {
-		maxLines = strToNumSuffix(strings.Trim(ff.maxLines, " \r\n"), 1000)
-	}
-	if len(ff.Maxsize) > 0 {
-		maxsize = strToNumSuffix(strings.Trim(ff.Maxsize, " \r\n"), 1024)
-	}
-	daily = ff.Daily
-	rotate = ff.Rotate
-	sanitize = ff.Sanitize
-
-	if !ff.Enable {
-		return nil, true
-	}
-
-	flw := NewFileLogWriter(file, rotate, daily)
-	flw.SetFormat(format)
-	flw.SetRotateLines(maxLines)
-	flw.SetRotateSize(maxsize)
-	flw.SetSanitize(sanitize)
-	return flw, true
-}
-
-
 
 func ReadFile(path string) (string, error) {
 	if path == "" {

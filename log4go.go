@@ -111,6 +111,8 @@ type LogWriter interface {
 	Close()
 
 	SetFormat(format string)
+
+	Write(p []byte) (n int, err error)
 }
 
 /****** Logger ******/

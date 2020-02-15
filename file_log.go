@@ -25,8 +25,8 @@ type FileLogWriter struct {
 	header, trailer string
 
 	// Rotate at linecount
-	maxLines          int
-	maxLinesCurLines int
+	MaxLines          int
+	MaxLinesCurLines int
 
 	// Rotate at size
 	maxsize         int
@@ -101,7 +101,7 @@ func NewFileLogWriter(fileName string, rotate bool, daily bool) *FileLogWriter {
 					return
 				}
 				now := time.Now()
-				if (w.maxLines > 0 && w.maxLinesCurLines >= w.maxLines) ||
+				if (w.MaxLines > 0 && w.MaxLinesCurLines >= w.MaxLines) ||
 					(w.maxsize > 0 && w.maxsizeCurSize >= w.maxsize) ||
 					(w.daily && now.Day() != w.dailyOpenDate) {
 					if err := w.intRotate(); err != nil {
@@ -123,7 +123,7 @@ func NewFileLogWriter(fileName string, rotate bool, daily bool) *FileLogWriter {
 				}
 
 				// Update the counts
-				w.maxLinesCurLines++
+				w.MaxLinesCurLines++
 				w.maxsizeCurSize += n
 			}
 		}
@@ -132,6 +132,10 @@ func NewFileLogWriter(fileName string, rotate bool, daily bool) *FileLogWriter {
 	return w
 }
 
+func (w *FileLogWriter) Write(p []byte) (n int, err error)    {
+	n, err = fmt.Fprint(w.file, p)
+	return
+}
 // Request that the logs rotate
 func (w *FileLogWriter) Rotate() {
 	w.rot <- true
@@ -207,7 +211,7 @@ func (w *FileLogWriter) intRotate() error {
 	w.dailyOpenDate = now.Day()
 
 	// initialize rotation values
-	w.maxLinesCurLines = 0
+	w.MaxLinesCurLines = 0
 	w.maxsizeCurSize = 0
 
 	return nil
@@ -225,7 +229,7 @@ func (w *FileLogWriter) SetFormat(format string) *FileLogWriter {
 // you can use %D and %T in your header/footer for date and time).
 func (w *FileLogWriter) SetHeadFoot(head, foot string) *FileLogWriter {
 	w.header, w.trailer = head, foot
-	if w.maxLinesCurLines == 0 {
+	if w.MaxLinesCurLines == 0 {
 		fmt.Fprint(w.file, FormatLogRecord(w.header, &LogRecord{Created: time.Now()}))
 	}
 	return w
@@ -233,9 +237,9 @@ func (w *FileLogWriter) SetHeadFoot(head, foot string) *FileLogWriter {
 
 // Set rotate at linecount (chainable). Must be called before the first log
 // message is written.
-func (w *FileLogWriter) SetRotateLines(maxLines int) *FileLogWriter {
-	//fmt.Fprintf(os.Stderr, "FileLogWriter.SetRotateLines: %v\n", maxLines)
-	w.maxLines = maxLines
+func (w *FileLogWriter) SetRotateLines(MaxLines int) *FileLogWriter {
+	//fmt.Fprintf(os.Stderr, "FileLogWriter.SetRotateLines: %v\n", MaxLines)
+	w.MaxLines = MaxLines
 	return w
 }
 

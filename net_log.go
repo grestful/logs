@@ -104,19 +104,24 @@ func (c *ConnWriter) needToConnectOnMsg() bool {
 	return c.ReconnectOnMsg
 }
 
-// This is the SocketLogWriter's output method
-func (c *ConnWriter) write(rec *LogRecord) {
+func (c *ConnWriter) Write(p []byte) (n int, err error)  {
 	c.Lock()
 	if c.needToConnectOnMsg() {
 		c.connect()
 	}
 
-	bt := bytes.NewBufferString(FormatLogRecord(c.format, rec))
-	_, e := c.writer.Write(append(bt.Bytes(), '\n'))
-	if e != nil {
+	n, err = c.writer.Write(append(p, '\n'))
+	if err != nil {
 		c.connect()
+		return 0, err
 	}
 	c.Unlock()
+	return n,nil
+}
+// This is the SocketLogWriter's output method
+func (c *ConnWriter) write(rec *LogRecord) {
+	bt := bytes.NewBufferString(FormatLogRecord(c.format, rec))
+	_, _ = c.Write(bt.Bytes())
 }
 
 func (c *ConnWriter) Close() {

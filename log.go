@@ -20,7 +20,7 @@ package logs
         "pattern": "[%D %T] [%C] [%L] (%S) %M",
         "rotate": true,				// whether rotate the log
         "maxsize": "500M",
-        "maxLines": "10K",
+        "MaxLines": "10K",
         "daily": true,
         "sanitize": true
     }],
