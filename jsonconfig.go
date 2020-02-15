@@ -9,7 +9,6 @@ import (
 type ConsoleConfig struct {
 	Enable  bool   `json:"enable"`
 	Level   string `json:"level"`
-	Pattern string `json:"pattern"`
 }
 
 type FileConfig struct {
