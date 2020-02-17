@@ -72,7 +72,7 @@ func FormatLogRecord(format string, rec *LogRecord) string {
 			switch piece[0] {
 			case 'A':
 				//ms := time.Now().UnixNano()/1e6 - time.Now().Unix()*1e3
-				out.WriteString(rec.Created.Format("2006-01-02T15:04:05.000Z07:00"))
+				out.WriteString(rec.Created.Format("2006-01-02T15:04:05.000Z0700"))
 			case 'T':
 				out.WriteString(cache.longTime)
 			case 't':
