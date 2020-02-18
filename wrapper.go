@@ -15,7 +15,7 @@ var (
 
 var Project = "App-Api"
 
-const FORMAT  =  "[%A][%L][%P] %M"
+const FORMAT  =  "[%A][%L][%P] %F%M"
 
 func init() {
 	Global = NewDefaultLogger(TRACE)
@@ -31,7 +31,7 @@ func SetDefaultLog(filter *Filter) {
 //FORMAT_ABBREV:  "[EROR] message\n",
 //},
 func SetConsole(config ConsoleConfig) {
-	format := "[%A][%L][%P] %M"
+	format := "[%A][%L][%P] %F:%M"
 	clw := NewConsoleLogWriter()
 	clw.SetFormat(format)
 
@@ -39,7 +39,7 @@ func SetConsole(config ConsoleConfig) {
 }
 
 func SetConn(config SocketConfig) {
-	format := "[%A][%L][%P] %M"
+	format := "[%A][%L][%P] %F:%M"
 	clw := NewConn(config.Protocol, config.Addr, format, getLogLevel(config.Level))
 	Global["socket"] = &Filter{getLogLevel(config.Level), clw, "SOCKET"}
 }

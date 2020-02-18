@@ -52,6 +52,7 @@ import (
 	"runtime"
 	"strings"
 	"time"
+	log1 "log"
 )
 
 
@@ -198,7 +199,6 @@ func (log Logger) intLogf(lvl Level, format string, args ...interface{}) {
 	if lvl < filter.Level {
 		return
 	}
-
 	// Determine caller func
 	pc, _, lineno, ok := runtime.Caller(2)
 	src := ""

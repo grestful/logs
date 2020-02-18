@@ -21,7 +21,7 @@ type ConsoleLogWriter struct {
 // This creates a new ConsoleLogWriter
 func NewConsoleLogWriter() *ConsoleLogWriter {
 	consoleWriter := &ConsoleLogWriter{
-		format: "[%A][%L][%P] %M",
+		format: "[%A][%L][%P] %F:%M",
 		w:      make(chan *LogRecord, LogBufferLength),
 	}
 	go consoleWriter.run(stdout)
