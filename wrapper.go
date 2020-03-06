@@ -44,6 +44,14 @@ func SetConn(config SocketConfig) {
 	Global["socket"] = &Filter{getLogLevel(config.Level), clw, "SOCKET"}
 }
 
+func SetFile(config FileConfig) {
+	format := "[%A][%L][%P] %F:%M"
+	clw := NewFileLogWriter(config.Filename, config.Rotate, config.Daily)
+	clw.SetFormat(format)
+
+	Global["file"] = &Filter{getLogLevel(config.Level), clw, "DEFAULT"}
+}
+
 // Wrapper for (*Logger).AddFilter
 //func AddFilter(name string, lvl Level, writer LogWriter) {
 //	Global.AddFilter(name, lvl, writer)

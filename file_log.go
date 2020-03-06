@@ -132,7 +132,7 @@ func NewFileLogWriter(fileName string, rotate bool, daily bool) *FileLogWriter {
 	return w
 }
 
-func (w *FileLogWriter) Write(p []byte) (n int, err error)    {
+func (w *FileLogWriter) Write(p []byte) (n int, err error) {
 	n, err = fmt.Fprint(w.file, p)
 	return
 }
@@ -219,9 +219,8 @@ func (w *FileLogWriter) intRotate() error {
 
 // Set the logging format (chainable).  Must be called before the first log
 // message is written.
-func (w *FileLogWriter) SetFormat(format string) *FileLogWriter {
+func (w *FileLogWriter) SetFormat(format string)  {
 	w.format = format
-	return w
 }
 
 // Set the logfile header and footer (chainable).  Must be called before the first log
@@ -288,10 +287,13 @@ func (w *FileLogWriter) SetSanitize(sanitize bool) *FileLogWriter {
 // NewXMLLogWriter is a utility method for creating a FileLogWriter set up to
 // output XML record log messages instead of line-based ones.
 func NewXMLLogWriter(fileName string, rotate bool, daily bool) *FileLogWriter {
-	return NewFileLogWriter(fileName, rotate, daily).SetFormat(
+	w := NewFileLogWriter(fileName, rotate, daily)
+	w.SetFormat(
 		`	<record level="%L">
 		<timestamp>%D %T</timestamp>
 		<source>%S</source>
 		<message>%M</message>
-	</record>`).SetHeadFoot("<log created=\"%D %T\">", "</log>")
+	</record>`)
+	w.SetHeadFoot("<log created=\"%D %T\">", "</log>")
+	return w
 }
