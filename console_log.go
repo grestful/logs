@@ -4,7 +4,6 @@ package logs
 
 import (
 	"fmt"
-	"github.com/grestful/utils"
 	"io"
 	"os"
 	"time"
@@ -51,5 +50,5 @@ func (c *ConsoleLogWriter) Close() {
 
 
 func (c *ConsoleLogWriter) Write(p []byte) (n int, err error) {
-	return fmt.Fprint(stdout, utils.BytesToString(p))
+	return fmt.Fprint(stdout, BytesToString(p))
 }

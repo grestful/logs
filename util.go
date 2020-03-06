@@ -3,6 +3,7 @@ package logs
 import (
 	"fmt"
 	"strconv"
+	"unsafe"
 )
 
 func recoverPanic() {
@@ -29,3 +30,20 @@ func strToNumSuffix(str string, mult int) int {
 	parsed, _ := strconv.Atoi(str)
 	return parsed * num
 }
+
+
+// BytesToString converts byte slice to string.
+func BytesToString(b []byte) string {
+	return *(*string)(unsafe.Pointer(&b))
+}
+
+// StringToBytes converts string to byte slice.
+func StringToBytes(s string) []byte {
+	return *(*[]byte)(unsafe.Pointer(
+		&struct {
+			string
+			Cap int
+		}{s, len(s)},
+	))
+}
+
