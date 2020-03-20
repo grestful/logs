@@ -133,7 +133,7 @@ func NewFileLogWriter(fileName string, rotate bool, daily bool) *FileLogWriter {
 }
 
 func (w *FileLogWriter) Write(p []byte) (n int, err error) {
-	n, err = fmt.Fprint(w.file, p)
+	n, err = fmt.Fprint(w.file, string(p[:]))
 	return
 }
 
