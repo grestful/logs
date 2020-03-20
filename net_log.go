@@ -32,17 +32,17 @@ type ConnWriter struct {
 	Reconnect      bool   `json:"reconnect"`
 	Net            string `json:"net"`
 	Addr           string `json:"addr"`
-	Level          Level    `json:"level"`
+	Level          Level  `json:"level"`
 }
 
 // NewConn create new ConnWrite returning as LoggerInterface.
 func NewConn(Net, Addr, format string, level Level) *ConnWriter {
 	w := &ConnWriter{
-		rec:       make(chan *LogRecord, LogBufferLength),
-		format:    "[%D %T] [%L] (%S) %M",
-		Net:Net,
-		Addr:Addr,
-		Level:level,
+		rec:    make(chan *LogRecord, LogBufferLength),
+		format: "[%D %T] [%L] (%S) %M",
+		Net:    Net,
+		Addr:   Addr,
+		Level:  level,
 	}
 
 	go func() {
@@ -104,7 +104,7 @@ func (c *ConnWriter) needToConnectOnMsg() bool {
 	return c.ReconnectOnMsg
 }
 
-func (c *ConnWriter) Write(p []byte) (n int, err error)  {
+func (c *ConnWriter) Write(p []byte) (n int, err error) {
 	c.Lock()
 	if c.needToConnectOnMsg() {
 		c.connect()
@@ -116,8 +116,9 @@ func (c *ConnWriter) Write(p []byte) (n int, err error)  {
 		return 0, err
 	}
 	c.Unlock()
-	return n,nil
+	return n, nil
 }
+
 // This is the SocketLogWriter's output method
 func (c *ConnWriter) write(rec *LogRecord) {
 	bt := bytes.NewBufferString(FormatLogRecord(c.format, rec))

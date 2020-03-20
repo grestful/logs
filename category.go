@@ -101,7 +101,7 @@ func (f *Filter) intLogc(lvl Level, closure func() string) {
 
 	default_filter := Global["stdout"]
 
-	if default_filter != nil &&  lvl > default_filter.Level {
+	if default_filter != nil && lvl > default_filter.Level {
 		default_filter.LogWrite(rec)
 	}
 

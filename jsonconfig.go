@@ -7,8 +7,8 @@ import (
 )
 
 type ConsoleConfig struct {
-	Enable  bool   `json:"enable"`
-	Level   string `json:"level"`
+	Enable bool   `json:"enable"`
+	Level  string `json:"level"`
 }
 
 type FileConfig struct {

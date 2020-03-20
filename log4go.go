@@ -54,7 +54,6 @@ import (
 	"time"
 )
 
-
 /****** Constants ******/
 
 // These are the integer logging levels used by the logger
@@ -120,7 +119,7 @@ type LogWriter interface {
 // A Filter represents the log level below which no log records are written to
 // the associated LogWriter.
 type Filter struct {
-	Level   Level
+	Level Level
 	LogWriter
 	Category string
 }
@@ -152,7 +151,7 @@ func NewConsoleLogger(lvl Level) Logger {
 // or above lvl to standard output.
 func NewDefaultLogger(lvl Level) Logger {
 	return Logger{
-		"default": &Filter{lvl,  NewConsoleLogWriter(), "DEFAULT"},
+		"default": &Filter{lvl, NewConsoleLogWriter(), "DEFAULT"},
 	}
 }
 
@@ -171,6 +170,7 @@ func (log Logger) Close() {
 func (log Logger) GetDefaultFilter() *Filter {
 	return log["default"]
 }
+
 // Add a new LogWriter to the Logger which will only log messages at lvl or
 // higher.  This function should not be called from multiple goroutines.
 // Returns the logger for chaining.
@@ -188,7 +188,7 @@ func (log Logger) AddFilter(name string, lvl Level, writer LogWriter, categorys 
 
 /******* Logging *******/
 // Send a formatted log message internally
-func (log Logger) intLogf(lvl Level, format string, args ...interface{}) {
+func (log Logger) intLogf(lvl Level, format string, args... interface{}) {
 
 	filter, ok := log["default"]
 	if !ok {
@@ -199,7 +199,7 @@ func (log Logger) intLogf(lvl Level, format string, args ...interface{}) {
 		return
 	}
 	// Determine caller func
-	pc, _, lineno, ok := runtime.Caller(2)
+	pc, _, lineno, ok := runtime.Caller(3)
 	src := ""
 	if ok {
 		src = fmt.Sprintf("%s:%d", runtime.FuncForPC(pc).Name(), lineno)
@@ -207,6 +207,10 @@ func (log Logger) intLogf(lvl Level, format string, args ...interface{}) {
 
 	msg := format
 	if len(args) > 0 {
+		for _, arg := range  args {
+			fmt.Println(arg)
+		}
+
 		msg = fmt.Sprintf(format, args...)
 	}
 
@@ -219,13 +223,6 @@ func (log Logger) intLogf(lvl Level, format string, args ...interface{}) {
 	}
 
 	filter.LogWrite(rec)
-	// Dispatch the logs
-	//for _, filt := range log {
-	//	if lvl < filt.Level {
-	//		continue
-	//	}
-	//	filt.LogWrite(rec)
-	//}
 }
 
 // Send a closure log message internally
@@ -240,7 +237,7 @@ func (log Logger) intLogc(lvl Level, closure func() string) {
 	}
 
 	// Determine caller func
-	pc, _, lineno, ok := runtime.Caller(2)
+	pc, _, lineno, ok := runtime.Caller(3)
 	src := ""
 	if ok {
 		src = fmt.Sprintf("%s:%d", runtime.FuncForPC(pc).Name(), lineno)

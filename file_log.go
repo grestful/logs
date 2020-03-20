@@ -25,15 +25,15 @@ type FileLogWriter struct {
 	header, trailer string
 
 	// Rotate at linecount
-	MaxLines          int
+	MaxLines         int
 	MaxLinesCurLines int
 
 	// Rotate at size
-	maxsize         int
+	maxsize        int
 	maxsizeCurSize int
 
 	// Rotate daily
-	daily          bool
+	daily         bool
 	dailyOpenDate int
 
 	// Keep old logfiles (.001, .002, etc)
@@ -136,6 +136,7 @@ func (w *FileLogWriter) Write(p []byte) (n int, err error) {
 	n, err = fmt.Fprint(w.file, p)
 	return
 }
+
 // Request that the logs rotate
 func (w *FileLogWriter) Rotate() {
 	w.rot <- true
@@ -219,7 +220,7 @@ func (w *FileLogWriter) intRotate() error {
 
 // Set the logging format (chainable).  Must be called before the first log
 // message is written.
-func (w *FileLogWriter) SetFormat(format string)  {
+func (w *FileLogWriter) SetFormat(format string) {
 	w.format = format
 }
 

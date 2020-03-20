@@ -10,16 +10,10 @@ import (
 	"strings"
 )
 
-const (
-	FORMAT_DEFAULT = "[%D %T] [%L] (%S) %M"
-	FORMAT_SHORT   = "[%t %d] [%L] %M"
-	FORMAT_ABBREV  = "[%L] %M"
-)
-
 type formatCacheType struct {
-	LastUpdateSeconds        int64
-	shortTime, shortDate     string
-	longTime, longDate string
+	LastUpdateSeconds    int64
+	shortTime, shortDate string
+	longTime, longDate   string
 }
 
 var formatCache = &formatCacheType{}

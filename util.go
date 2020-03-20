@@ -31,7 +31,6 @@ func strToNumSuffix(str string, mult int) int {
 	return parsed * num
 }
 
-
 // BytesToString converts byte slice to string.
 func BytesToString(b []byte) string {
 	return *(*string)(unsafe.Pointer(&b))
@@ -46,4 +45,3 @@ func StringToBytes(s string) []byte {
 		}{s, len(s)},
 	))
 }
-

@@ -26,9 +26,11 @@ func NewConsoleLogWriter() *ConsoleLogWriter {
 	go consoleWriter.run(stdout)
 	return consoleWriter
 }
+
 func (c *ConsoleLogWriter) SetFormat(format string) {
 	c.format = format
 }
+
 func (c *ConsoleLogWriter) run(out io.Writer) {
 	for rec := range c.w {
 		fmt.Fprint(out, FormatLogRecord(c.format, rec))
@@ -47,7 +49,6 @@ func (c *ConsoleLogWriter) Close() {
 	close(c.w)
 	time.Sleep(50 * time.Millisecond) // Try to give console I/O time to complete
 }
-
 
 func (c *ConsoleLogWriter) Write(p []byte) (n int, err error) {
 	return fmt.Fprint(stdout, BytesToString(p))
