@@ -69,7 +69,7 @@ func getLogLevel(l string) Level {
 	case "FATAL":
 		lvl = FATAL
 	default:
-		fmt.Fprintf(os.Stderr, "LoadJsonConfiguration: Error: Required level <%s> for filter has unknown value: %s\n", "level", l)
+		_, _ = fmt.Fprintf(os.Stderr, "LoadJsonConfiguration: Error: Required level <%s> for filter has unknown value: %s\n", "level", l)
 		os.Exit(1)
 	}
 	return lvl

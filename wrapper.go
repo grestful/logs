@@ -159,7 +159,7 @@ func Warn(arg0 interface{}, args ...interface{}) error {
 }
 
 //no err return Warn
-func WarnLog(arg0 interface{}, args ...interface{})  {
+func WarnLog(arg0 interface{}, args ...interface{}) {
 	_ = Warn(arg0, args)
 }
 
@@ -174,9 +174,10 @@ func Error(arg0 interface{}, args ...interface{}) error {
 }
 
 //no err return Error
-func ErrorLog(arg0 interface{}, args ...interface{})  {
+func ErrorLog(arg0 interface{}, args ...interface{}) {
 	_ = Error(arg0, args)
 }
+
 // Utility for critical log messages (returns an error for easy function returns) (see Debug() for parameter explanation)
 // These functions will execute a closure exactly once, to build the error message for the return
 // Wrapper for (*Logger).Critical
@@ -187,9 +188,8 @@ func Fatal(arg0 interface{}, args ...interface{}) error {
 	return doErrLog(lvl, arg0, args...)
 }
 
-
 //no err return Fatal
-func FatalLog(arg0 interface{}, args ...interface{})  {
+func FatalLog(arg0 interface{}, args ...interface{}) {
 	_ = Fatal(arg0, args...)
 }
 
@@ -209,7 +209,6 @@ func doErrLog(lvl Level, arg0 interface{}, args ...interface{}) error {
 		Global.intLogf(lvl, fmt.Sprint(first)+strings.Repeat(" %v", len(args)), args...)
 		return errors.New(fmt.Sprint(first) + fmt.Sprintf(strings.Repeat(" %v", len(args)), args...))
 	}
-	return nil
 }
 
 func doLog(lvl Level, arg0 interface{}, args ...interface{}) {

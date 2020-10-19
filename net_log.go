@@ -37,9 +37,12 @@ type ConnWriter struct {
 
 // NewConn create new ConnWrite returning as LoggerInterface.
 func NewConn(Net, Addr, format string, level Level) *ConnWriter {
+	if format == "" {
+		format = "[%D %T] [%L] (%S) %M"
+	}
 	w := &ConnWriter{
 		rec:    make(chan *LogRecord, LogBufferLength),
-		format: "[%D %T] [%L] (%S) %M",
+		format: format,
 		Net:    Net,
 		Addr:   Addr,
 		Level:  level,
@@ -48,7 +51,7 @@ func NewConn(Net, Addr, format string, level Level) *ConnWriter {
 	go func() {
 		defer recoverPanic()
 		defer func() {
-			w.connect()
+			_ = w.connect()
 		}()
 
 		for {
@@ -74,7 +77,7 @@ func (c *ConnWriter) SetFormat(format string) {
 
 func (c *ConnWriter) connect() error {
 	if c.writer != nil {
-		c.writer.Close()
+		_=c.writer.Close()
 		c.writer = nil
 	}
 
@@ -84,7 +87,7 @@ func (c *ConnWriter) connect() error {
 	}
 
 	if tcpConn, ok := conn.(*net.TCPConn); ok {
-		tcpConn.SetKeepAlive(true)
+		_=tcpConn.SetKeepAlive(true)
 	}
 
 	c.writer = conn
@@ -107,12 +110,12 @@ func (c *ConnWriter) needToConnectOnMsg() bool {
 func (c *ConnWriter) Write(p []byte) (n int, err error) {
 	c.Lock()
 	if c.needToConnectOnMsg() {
-		c.connect()
+		_=c.connect()
 	}
 
 	n, err = c.writer.Write(append(p, '\n'))
 	if err != nil {
-		c.connect()
+		_=c.connect()
 		return 0, err
 	}
 	c.Unlock()
