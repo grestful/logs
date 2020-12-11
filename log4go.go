@@ -207,9 +207,9 @@ func (log Logger) intLogf(lvl Level, format string, args... interface{}) {
 
 	msg := format
 	if len(args) > 0 {
-		for _, arg := range  args {
-			fmt.Println(arg)
-		}
+		//for _, arg := range  args {
+		//	fmt.Println(arg)
+		//}
 
 		msg = fmt.Sprintf(format, args...)
 	}
