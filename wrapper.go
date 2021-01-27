@@ -160,7 +160,10 @@ func Warn(arg0 interface{}, args ...interface{}) error {
 
 //no err return Warn
 func WarnLog(arg0 interface{}, args ...interface{}) {
-	_ = Warn(arg0, args)
+	const (
+		lvl = WARN
+	)
+	_ = doErrLog(lvl, arg0, args...)
 }
 
 // Utility for error log messages (returns an error for easy function returns) (see Debug() for parameter explanation)
@@ -175,7 +178,10 @@ func Error(arg0 interface{}, args ...interface{}) error {
 
 //no err return Error
 func ErrorLog(arg0 interface{}, args ...interface{}) {
-	_ = Error(arg0, args)
+	const (
+		lvl = ERROR
+	)
+	_ = doErrLog(lvl, arg0, args...)
 }
 
 // Utility for critical log messages (returns an error for easy function returns) (see Debug() for parameter explanation)
@@ -190,7 +196,10 @@ func Fatal(arg0 interface{}, args ...interface{}) error {
 
 //no err return Fatal
 func FatalLog(arg0 interface{}, args ...interface{}) {
-	_ = Fatal(arg0, args...)
+	const (
+		lvl = FATAL
+	)
+	_ = doErrLog(lvl, arg0, args...)
 }
 
 func doErrLog(lvl Level, arg0 interface{}, args ...interface{}) error {
